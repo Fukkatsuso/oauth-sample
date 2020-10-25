@@ -6,27 +6,34 @@ services:
       context: ./app
       dockerfile: Dockerfile
       target: dev
-    depends_on: 
-      - db
+    # depends_on: 
+    #   - db
     tty: true
+    environment:
+      MYSQL_USER: authapp
+      MYSQL_PASSWORD: password
+      MYSQL_PROTOCOL: tcp(localhost:3306)
+      MYSQL_DATABASE: authdb
+    env_file:
+      - ./app/keys.env
     volumes:
       - ./app:/go/src/github.com/Fukkatsuso/oauth-sample/app
     ports: 
       - 8080:8080
 
-  db:
-    build: 
-      context: ./db
-      dockerfile: Dockerfile
-    tty: true
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: authdb
-      MYSQL_USER: authapp
-      MYSQL_PASSWORD: password
-      TZ: "Asia/Tokyo"
-    volumes:
-      - ./db/volumes:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d
-    ports:
-      - 3306:3306
+  # db:
+  #   build: 
+  #     context: ./db
+  #     dockerfile: Dockerfile
+  #   tty: true
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: authdb
+  #     MYSQL_USER: authapp
+  #     MYSQL_PASSWORD: password
+  #     TZ: "Asia/Tokyo"
+  #   volumes:
+  #     - ./db/volumes:/var/lib/mysql
+  #     - ./db/init:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - 3306:3306

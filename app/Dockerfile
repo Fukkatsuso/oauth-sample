@@ -6,6 +6,8 @@ RUN apk --no-cache add \
 
 WORKDIR /go/src/github.com/Fukkatsuso/oauth-sample/app
 
+ENV GO111MODULE=on
+
 COPY go.mod .
 
 RUN go mod download

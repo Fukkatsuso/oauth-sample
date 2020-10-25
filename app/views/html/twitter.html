@@ -1,0 +1,30 @@
+{{ template "header" . }}
+
+<h2>profile</h2>
+<img src="{{ .user.ImageURL }}" alt="profile-image" width="100px">
+<ul>
+  <li>name: {{ .user.Name }} </li>
+  <li>screenName: {{ .user.ScreenName }}</li>
+</ul>
+
+<h2>new tweet</h2>
+<form action="twitter/post" method="post">
+  <div>
+    <textarea name="content" cols="35" rows="4"></textarea>
+  </div>
+  <input type="submit" value="ツイート">
+</form>
+
+<h2>posts</h2>
+<ul>
+{{ range $i, $v := .timeline.Posts }}
+  <li>{{ $i }}: {{ $v.Text }}</li>
+{{ end }}
+</ul>
+
+<a href="/">home</a>
+<form action="twitter/unoauth" method="post">
+  <input type="submit" value="unoauth">
+</form>
+
+{{ template "footer" }}
