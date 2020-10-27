@@ -19,14 +19,16 @@ var (
 	callbackURL    string
 	consumerKey    string
 	consumerSecret string
-	consumer       *oauth.Consumer
 )
 
 func init() {
 	callbackURL = os.Getenv("TWITTER_CALLBACK_URL")
 	consumerKey = os.Getenv("TWITTER_API_KEY")
 	consumerSecret = os.Getenv("TWITTER_API_SECRET")
-	consumer = oauth.NewConsumer(consumerKey, consumerSecret,
+}
+
+func NewClient() *oauth.Consumer {
+	return oauth.NewConsumer(consumerKey, consumerSecret,
 		oauth.ServiceProvider{
 			RequestTokenUrl:   requestTokenURL,
 			AuthorizeTokenUrl: authenticateURL,
@@ -35,8 +37,9 @@ func init() {
 }
 
 func OAuth(c *gin.Context) (string, error) {
+	client := NewClient()
 	// リクエストトークンを取得
-	rToken, loginURL, err := consumer.GetRequestTokenAndUrl(callbackURL)
+	rToken, loginURL, err := client.GetRequestTokenAndUrl(callbackURL)
 	if err != nil {
 		return "", nil
 	}
@@ -75,8 +78,9 @@ func Callback(c *gin.Context) (string, error) {
 	}
 	rToken := oauth.RequestToken{Token: rt, Secret: rs}
 
+	client := NewClient()
 	// アクセストークンを取得
-	aToken, err := consumer.AuthorizeToken(&rToken, verificationCode)
+	aToken, err := client.AuthorizeToken(&rToken, verificationCode)
 	if err != nil {
 		return "/", err
 	}

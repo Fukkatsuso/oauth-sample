@@ -15,8 +15,9 @@ const (
 )
 
 func GetUser(c *gin.Context, token *oauth.AccessToken, user *User) error {
+	client := NewClient()
 	params := map[string]string{}
-	resp, err := consumer.Get(accountVerifyCredsURL, params, token)
+	resp, err := client.Get(accountVerifyCredsURL, params, token)
 	if err != nil {
 		return err
 	}
@@ -37,10 +38,11 @@ func Tweet(c *gin.Context, token *oauth.AccessToken, post *NewPost) error {
 	if len(post.Status) == 0 || len(post.Status) > 140 {
 		return errors.New("status must be 0~140 chars")
 	}
+	client := NewClient()
 	params := map[string]string{
 		"status": post.Status,
 	}
-	resp, err := consumer.Post(tweetURL, params, token)
+	resp, err := client.Post(tweetURL, params, token)
 	if err != nil {
 		return err
 	}
@@ -57,10 +59,11 @@ func Tweet(c *gin.Context, token *oauth.AccessToken, post *NewPost) error {
 }
 
 func GetUserTimeline(c *gin.Context, token *oauth.AccessToken, id string, tl *UserTimeline) error {
+	client := NewClient()
 	params := map[string]string{
 		"user_id": id,
 	}
-	resp, err := consumer.Get(userTimelineURL, params, token)
+	resp, err := client.Get(userTimelineURL, params, token)
 	if err != nil {
 		return err
 	}
